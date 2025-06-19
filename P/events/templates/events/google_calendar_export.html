@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Экспорт событий в Google Календарь</h2>
+<div class="alert alert-info mb-4">
+    Нажмите на кнопку <b>«Добавить в Google Календарь»</b> напротив нужного события, чтобы быстро добавить его в свой календарь Google.<br>
+    <small>Экспорт работает для каждого события отдельно. Для массового экспорта используйте Google Calendar API или обратитесь к администратору.</small>
+</div>
+<div class="table-responsive">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Название</th>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.title }}</td>
+            <td>{{ event.date|date:'d.m.Y H:i' }}</td>
+            <td>{{ event.get_type_display }}</td>
+            <td>{{ event.description|truncatechars:60 }}</td>
+            <td>
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ event.title|urlencode }}&dates={{ event.date|date:'Ymd\THis\Z' }}/{{ event.date|date:'Ymd\THis\Z' }}&details={{ event.description|urlencode }}" target="_blank" class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-google"></i> Добавить в Google Календарь
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center">Нет событий для экспорта</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %} 

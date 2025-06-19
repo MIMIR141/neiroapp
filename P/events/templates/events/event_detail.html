@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h2 class="card-title"><i class="bi bi-calendar-event"></i> {{ event.title }}</h2>
+        <p class="mb-1"><i class="bi bi-clock"></i> <b>Дата:</b> {{ event.date|date:'d.m.Y H:i' }}</p>
+        <p class="mb-1"><i class="bi bi-tag"></i> <b>Тип:</b> <span class="badge bg-info text-dark">{{ event.get_type_display }}</span></p>
+        <p class="mb-1"><i class="bi bi-person"></i> <b>Организатор:</b> {{ event.organizer.email }}</p>
+        <p class="mb-3"><i class="bi bi-info-circle"></i> <b>Описание:</b> {{ event.description }}</p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a href="{% url 'register_participant' event.id %}" class="btn btn-primary"><i class="bi bi-person-plus"></i> Зарегистрироваться</a>
+            <a href="{% url 'generate_invite_link' event.id %}" class="btn btn-outline-secondary"><i class="bi bi-link-45deg"></i> Получить ссылку-приглашение</a>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ event.title|urlencode }}&dates={{ event.date|date:'Ymd\\THis\\Z' }}/{{ event.date|date:'Ymd\\THis\\Z' }}&details={{ event.description|urlencode }}" target="_blank" class="btn btn-outline-success"><i class="bi bi-google"></i> Добавить в Google Календарь</a>
+            {% if user == event.organizer or user.is_superuser %}
+            <a href="{% url 'event_delete' event.id %}" class="btn btn-outline-danger"><i class="bi bi-trash"></i> Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<h3 class="mt-4 mb-3">Участники</h3>
+<div class="table-responsive">
+<table class="table table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Зарегистрирован</th>
+            <th>Пришел</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reg in event.registrations.all %}
+        <tr>
+            <td>{{ reg.name }}</td>
+            <td>{{ reg.email }}</td>
+            <td>{{ reg.registered_at|date:'d.m.Y H:i' }}</td>
+            <td class="text-center">{% if reg.attended %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle text-danger"></i>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center">Нет участников</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %} 

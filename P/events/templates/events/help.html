@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2><i class="bi bi-question-circle"></i> Помощь и инструкции</h2>
+<div class="mb-4">
+    <p>Добро пожаловать в систему управления мероприятиями! Здесь вы найдёте ответы на частые вопросы и инструкции по основным функциям:</p>
+    <ul>
+        <li><b>Создание события:</b> В разделе <a href="/events/">События</a> нажмите «Создать мероприятие».</li>
+        <li><b>Регистрация участников:</b> Откройте нужное событие и нажмите «Зарегистрироваться».</li>
+        <li><b>Экспорт и импорт:</b> Используйте разделы <a href="/analytics/export/csv/">Экспорт CSV</a> и <a href="/events/import/">Импорт</a>.</li>
+        <li><b>Google Календарь:</b> Для каждого события есть кнопка «Добавить в Google Календарь», а также <a href="/events/google-calendar/">массовый экспорт</a>.</li>
+        <li><b>Аналитика:</b> В разделе <a href="/analytics/">Аналитика</a> доступны графики и таблицы.</li>
+        <li><b>Смена темы:</b> Кнопка «Сменить тему» в меню слева.</li>
+    </ul>
+</div>
+<div class="accordion" id="faqAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="faq1"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">Как добавить событие в Google Календарь?</button></h2>
+    <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">Откройте нужное событие или раздел <a href="/events/google-calendar/">Google Календарь</a> и нажмите кнопку «Добавить в Google Календарь».</div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="faq2"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">Как импортировать список участников?</button></h2>
+    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">Перейдите в раздел <a href="/events/import/">Импорт</a>, загрузите CSV-файл по образцу и подтвердите импорт.</div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="faq3"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">Как удалить мероприятие?</button></h2>
+    <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">Откройте нужное событие и нажмите «Удалить» (доступно только организатору или администратору).</div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="faq4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">Как сменить язык или часовой пояс?</button></h2>
+    <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">Язык и часовой пояс настраиваются администратором в конфигурации сайта. По умолчанию — русский и Москва.</div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

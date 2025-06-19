@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Ссылка-приглашение</h2>
+<p>Скопируйте и отправьте участнику:</p>
+<div class="alert alert-info">
+    <input type="text" class="form-control" value="{{ link }}" readonly onclick="this.select();document.execCommand('copy');">
+</div>
+<a href="{% url 'event_detail' event.id %}" class="btn btn-primary">Назад к мероприятию</a>
+{% endblock %} 

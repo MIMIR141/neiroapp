@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Гости (участники всех мероприятий)</h2>
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Мероприятие</th>
+            <th>Дата регистрации</th>
+            <th>Пришел</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for guest in guests %}
+        <tr>
+            <td>{{ guest.name }}</td>
+            <td>{{ guest.email }}</td>
+            <td>{{ guest.event.title }}</td>
+            <td>{{ guest.registered_at|date:'d.m.Y H:i' }}</td>
+            <td class="text-center">{% if guest.attended %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle text-danger"></i>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center">Нет гостей</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %} 

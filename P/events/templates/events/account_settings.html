@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2><i class="bi bi-person-gear"></i> Настройки аккаунта</h2>
+<form method="post" enctype="multipart/form-data" class="mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="name" class="form-label">Имя</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ user.first_name }}" placeholder="Ваше имя">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="avatar" class="form-label">Аватар</label><br>
+        {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="avatar" class="rounded mb-2" style="max-width:100px; max-height:100px;">
+        {% endif %}
+        <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+    </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">Телефон</label>
+        <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.phone }}" placeholder="+7...">
+    </div>
+    <div class="mb-3">
+        <label for="organization" class="form-label">Организация</label>
+        <input type="text" class="form-control" id="organization" name="organization" value="{{ profile.organization }}">
+    </div>
+    <div class="mb-3">
+        <label for="position" class="form-label">Должность</label>
+        <input type="text" class="form-control" id="position" name="position" value="{{ profile.position }}">
+    </div>
+    <div class="mb-3">
+        <label for="city" class="form-label">Город</label>
+        <input type="text" class="form-control" id="city" name="city" value="{{ profile.city }}">
+    </div>
+    <div class="mb-3">
+        <label for="birth_date" class="form-label">Дата рождения</label>
+        <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ profile.birth_date|date:'Y-m-d' }}">
+    </div>
+    <button type="submit" name="save_profile" class="btn btn-primary"><i class="bi bi-save"></i> Сохранить</button>
+</form>
+<hr>
+<h4>Смена пароля</h4>
+<form method="post">
+    {% csrf_token %}
+    {{ password_form.as_p }}
+    <button type="submit" name="change_password" class="btn btn-warning"><i class="bi bi-key"></i> Сменить пароль</button>
+</form>
+{% endblock %} 

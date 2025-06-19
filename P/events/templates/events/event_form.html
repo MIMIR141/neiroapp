@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!-- Кнопка для открытия модального окна -->
+<button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#eventModal">
+    <i class="bi bi-plus-circle"></i> Создать мероприятие
+</button>
+<!-- Модальное окно -->
+<div class="modal fade show" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-modal="true" style="display:block; background:rgba(0,0,0,0.3);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">Создать мероприятие</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <form method="post">
+        <div class="modal-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="form-text">Заполните все поля. После создания вы сможете пригласить участников.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Сохранить</button>
+          <a href="{% url 'event_list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+// Onboarding: подсказка для новых пользователей
+if (!localStorage.getItem('event_onboarded')) {
+    setTimeout(() => {
+        alert('Заполните форму и нажмите Сохранить, чтобы создать мероприятие. После этого вы сможете пригласить участников и отслеживать статистику!');
+        localStorage.setItem('event_onboarded', '1');
+    }, 500);
+}
+</script>
+{% endblock %} 

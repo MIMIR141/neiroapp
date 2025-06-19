@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h2>Календарь мероприятий</h2>
+<div id="calendar"></div>
+<!-- Модальное окно для создания события -->
+<div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createEventModalLabel">Создать мероприятие</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <form id="calendarEventForm">
+        <div class="modal-body">
+          <input type="hidden" name="date" id="eventDateInput">
+          <div class="mb-3">
+            <label for="eventTitleInput" class="form-label">Название</label>
+            <input type="text" class="form-control" name="title" id="eventTitleInput" required>
+          </div>
+          <div class="mb-3">
+            <label for="eventTypeInput" class="form-label">Тип</label>
+            <select class="form-select" name="type" id="eventTypeInput" required>
+              <option value="conference">Конференция</option>
+              <option value="concert">Концерт</option>
+              <option value="meetup">Митап</option>
+              <option value="workshop">Мастер-класс</option>
+              <option value="other">Другое</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="eventDescInput" class="form-label">Описание</label>
+            <textarea class="form-control" name="description" id="eventDescInput" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Создать</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'ru',
+    height: 650,
+    events: '/events/api/calendar/',
+    editable: true,
+    eventDrop: async function(info) {
+      // drag&drop: отправить новую дату на сервер
+      const response = await fetch(`/events/api/calendar/update/${info.event.id}/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        body: new URLSearchParams({ date: info.event.startStr })
+      });
+      if (!response.ok) {
+        alert('Ошибка при изменении даты!');
+        info.revert();
+      }
+    },
+    eventClick: function(info) {
+      window.location.href = info.event.url;
+    },
+    dateClick: function(info) {
+      // Открыть модальное окно и подставить дату
+      document.getElementById('eventDateInput').value = info.dateStr + 'T12:00';
+      var modal = new bootstrap.Modal(document.getElementById('createEventModal'));
+      modal.show();
+    },
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+  });
+  calendar.render();
+  // Onboarding: подсказка для новых пользователей
+  if (!localStorage.getItem('calendar_onboarded')) {
+    setTimeout(() => {
+      alert('В этом календаре вы видите все мероприятия. Кликните по событию, чтобы узнать подробности или зарегистрироваться!\n\nКлик по дате — быстрое создание нового события. События можно перетаскивать мышкой для изменения даты.');
+      localStorage.setItem('calendar_onboarded', '1');
+    }, 700);
+  }
+  // Обработка отправки формы создания события
+  document.getElementById('calendarEventForm').onsubmit = async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const response = await fetch('/events/api/calendar/create/', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+      body: data
+    });
+    if (response.ok) {
+      location.reload();
+    } else {
+      alert('Ошибка при создании события!');
+    }
+  };
+});
+</script>
+{% endblock %} 

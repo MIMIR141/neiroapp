@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!-- Кнопка для открытия модального окна -->
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#regModal">
+    <i class="bi bi-person-plus"></i> Зарегистрироваться на мероприятие
+</button>
+<!-- Модальное окно -->
+<div class="modal fade show" id="regModal" tabindex="-1" aria-labelledby="regModalLabel" aria-modal="true" style="display:block; background:rgba(0,0,0,0.3);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="regModalLabel">Регистрация на: {{ event.title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <form method="post">
+        <div class="modal-body">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="form-text">Введите свои данные для регистрации. После регистрации вы получите уведомление и приглашение на email.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+          <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary">Отмена</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+// Onboarding: подсказка для новых пользователей
+if (!localStorage.getItem('reg_onboarded')) {
+    setTimeout(() => {
+        alert('Введите имя и email, чтобы зарегистрироваться на мероприятие. После регистрации вы получите уведомление и приглашение на почту!');
+        localStorage.setItem('reg_onboarded', '1');
+    }, 500);
+}
+</script>
+{% endblock %} 

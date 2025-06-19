@@ -1,0 +1,10 @@
+Django>=5.2
+psycopg2-binary
+django-allauth
+django-crispy-forms
+django-bootstrap4
+matplotlib
+pandas
+requests
+pyjwt
+cryptography 

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Импорт мероприятий и участников из CSV</h2>
+<form method="post" enctype="multipart/form-data" class="mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="csvFile" class="form-label">CSV-файл</label>
+        <input type="file" class="form-control" id="csvFile" name="csv_file" accept=".csv" required>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-upload"></i> Импортировать</button>
+</form>
+<div class="alert alert-info">
+    <b>Формат CSV:</b><br>
+    <code>title,date,description,type,participant_name,participant_email</code><br>
+    <small>date — в формате YYYY-MM-DD HH:MM:SS. Можно импортировать только события, только участников или и то, и другое.</small>
+</div>
+{% endblock %} 

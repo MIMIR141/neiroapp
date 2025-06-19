@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Аналитика</h2>
+{% if chart %}
+<div class="mb-4">
+    <img src="data:image/png;base64,{{ chart }}" class="img-fluid" alt="График регистраций">
+</div>
+{% else %}
+<p>Нет данных для отображения графика.</p>
+{% endif %}
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h3 class="mb-0">События</h3>
+    <a href="{% url 'analytics_export_csv' %}" class="btn btn-outline-secondary"><i class="bi bi-download"></i> Экспорт в CSV</a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Кол-во участников</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.title }}</td>
+            <td>{{ event.date|date:'d.m.Y H:i' }}</td>
+            <td>{{ event.get_type_display }}</td>
+            <td>{{ event.registrations.count }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Нет событий</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+// Onboarding: подсказка для новых пользователей
+if (!localStorage.getItem('analytics_onboarded')) {
+    setTimeout(() => {
+        alert('На этой странице вы видите график регистраций и статистику по всем событиям. Используйте эти данные для анализа активности!');
+        localStorage.setItem('analytics_onboarded', '1');
+    }, 700);
+}
+</script>
+{% endblock %} 
